@@ -4,10 +4,11 @@
 % rotVector représente la rotation sur chaque axe pour le cube. 
 % realCheck({[30 30 30], 9},{[0 1 1],[1 1 1],[1 0 1],[0 0 1],[0 1 0],[1 1 0],[1 0 0],[0 0 0],[0.5 0.5 0.5]},[1 1 1])
 
-function [impact, coordX, coordY ,coordZ] = realCheck( sphere, cube, rotVector )
+function retVal = realCheck( sphere, cube, rotVector )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
+    impact = 0;
     %disp('before');
     %cube{1} - cube{9}
     %cube{2} - cube{9}
@@ -37,6 +38,7 @@ function [impact, coordX, coordY ,coordZ] = realCheck( sphere, cube, rotVector )
     sphere{1} = sphere{1} - cube{9}; % Référenciel du centre de masse du cube
     transpS = xRotMat * yRotMat * zRotMat * sphere{1}';
     sphere{1} = transpS';
+    sphere{1}
     
     %disp('after');
     %cube{1}
@@ -52,22 +54,22 @@ function [impact, coordX, coordY ,coordZ] = realCheck( sphere, cube, rotVector )
     impactAxeX = 0;
     intersecX = 0;
     proj = [cube{3}(1), cube{4}(1)];
-    sproj = sphere{1}(1);
-    maxProj = max(proj);
-    minProj = min(proj);
+    sproj = sphere{1}(1)
+    maxProj = max(proj)
+    minProj = min(proj)
     
     % intersection dans l'axe des x
-    if((sproj + sphere{2} > minProj) && (sproj + sphere{2} < maxProj))
+    if((sproj + sphere{2} > -0.04) && (sproj + sphere{2} < 0.04))
         intersecX = 1;
         impactAxeX = sproj + sphere{2};
     end
     
-    if ((sproj - sphere{2} > minProj) && (sproj - sphere{2} < maxProj))
+    if ((sproj - sphere{2} > -0.04) && (sproj - sphere{2} < 0.04))
         intersecX = 1;
         impactAxeX = sproj - sphere{2};
     end
     
-    if((sproj > minProj) && (sproj < maxProj))
+    if((sproj > -0.04) && (sproj < 0.04))
         intersecX = 1;
         impactAxeX = sproj;
     end
@@ -82,17 +84,17 @@ function [impact, coordX, coordY ,coordZ] = realCheck( sphere, cube, rotVector )
     minProj = min(proj);
     
     % intersection dans l'axe des y
-    if((sproj + sphere{2} > minProj) && (sproj + sphere{2} < maxProj))
+    if((sproj + sphere{2} > -0.04) && (sproj + sphere{2} < 0.04))
         intersecY = 1;
         impactAxeY = sproj + sphere{2};
     end
     
-    if ((sproj - sphere{2} > minProj) && (sproj - sphere{2} < maxProj))
+    if ((sproj - sphere{2} > -0.04) && (sproj - sphere{2} < 0.04))
         intersecY = 1;
         impactAxeY = sproj - sphere{2};
     end
     
-    if((sproj > minProj) && (sproj < maxProj))
+    if((sproj > -0.04) && (sproj < 0.04))
         intersecY = 1;
         impactAxeY = sproj;
     end
@@ -108,17 +110,17 @@ function [impact, coordX, coordY ,coordZ] = realCheck( sphere, cube, rotVector )
     minProj = min(proj);
     
     % intersection dans l'axe des y
-    if((sproj + sphere{2} > minProj) && (sproj + sphere{2} < maxProj))
+    if((sproj + sphere{2} > -0.04) && (sproj + sphere{2} < 0.04))
         intersecZ = 1;
         impactAxeZ = sproj + sphere{2};
     end
     
-    if ((sproj - sphere{2} > minProj) && (sproj - sphere{2} < maxProj))
+    if ((sproj - sphere{2} > -0.04) && (sproj - sphere{2} < 0.04))
         intersecZ = 1;
         impactAxeZ = sproj - sphere{2};
     end
     
-    if((sproj > minProj) && (sproj < maxProj))
+    if((sproj > -0.04) && (sproj < 0.04))
         intersecZ = 1;
         impactAxeZ = sproj;
     end
@@ -126,14 +128,40 @@ function [impact, coordX, coordY ,coordZ] = realCheck( sphere, cube, rotVector )
     
     % ici on vérifie si on a eu une collision dans les 2 axes
     
-    coordX
-    coordY
-    coordZ 
+    coordX = 0;
+    coordY = 0;
+    coordZ = 0;
+    
+    impactVec = [coordX, coordY, coordZ];
+    
+    xAngle = rotVector(1); % On fait la rotation
+    yAngle = rotVector(2);
+    zAngle = rotVector(3);
+    
+    xRotMat = [1 0 0;0 cos(xAngle) -sin(xAngle);0 sin(xAngle) cos(xAngle)];
+    yRotMat = [cos(yAngle) 0 sin(yAngle);0 1 0;-sin(yAngle) 0 cos(yAngle)];
+    zRotMat = [cos(zAngle) -sin(zAngle) 0;sin(zAngle) cos(zAngle) 0;0 0 1];
+    
+    
+    impactVecRot = xRotMat * yRotMat * zRotMat * impactVec';
+    impactVecRot = impactVecRot';
+    %On doit faire la rotation inverse pour retrouver le systeme de 
+    %coordonnées originelles
+    
+    %intersecX
+    %intersecY
+    %intersecZ
+    
+    
     
     if intersecX == 1 && intersecY == 1 && intersecZ == 1
         impact = 1;
-        coordX
-        coordY
-        coordZ
+        coordX = impactVecRot(1);
+        coordY = impactVecRot(2);
+        coordZ = impactVecRot(3);
+        retVal = [impact coordX coordY coordZ];
+    else
+        retVal = [impact 0 0 0];
     end
+    
 end

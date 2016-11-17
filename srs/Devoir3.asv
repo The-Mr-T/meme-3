@@ -140,7 +140,7 @@ while simStop == 0
             normaleCollision = normaleCollision / norm(normaleCollision);
             collisionPoint = collisionPoint + cube{9}; % référentiel par rapport à l'origine
             
-            inertieSphere = (2 * 0.05 / 3) * 0.02^2;
+            inertieSphere = ((2 * 0.05 / 3) * 0.02)^2;
             inertieSphereMat = [inertieSphere 0 0; 0 inertieSphere 0; 0 0 inertieSphere];
             
             inertieCube = ((1 / 12) * 1.2) * ((0.08^2) * 2);
@@ -215,8 +215,8 @@ while simStop == 0
     end
     
     if cubeHasLanded == 1 ||  balleHasLanded == 1
-        blocf = [qCube(iterationIndex, 1) qCube(iterationIndex, 2) qCube(iterationIndex, 3) avbloci;qCube(iterationIndex, 1) qCube(iterationIndex, 2) qCube(iterationIndex, 3) avbloci ]
-        ballef = [qBalle(iterationIndex, 1) qBalle(iterationIndex, 2) qBalle(iterationIndex, 3) 0 0 0;qBalle(iterationIndex, 1) qBalle(iterationIndex, 2) qBalle(iterationIndex, 3) 0 0 0 ]
+        blocf = [qCube(iterationIndex, 1) qCube(iterationIndex, 2) qCube(iterationIndex, 3) avbloci;qCube(iterationIndex, 1) qCube(iterationIndex, 2) qCube(iterationIndex, 3) avbloci ];
+        ballef = [qBalle(iterationIndex, 1) qBalle(iterationIndex, 2) qBalle(iterationIndex, 3) 0 0 0;qBalle(iterationIndex, 1) qBalle(iterationIndex, 2) qBalle(iterationIndex, 3) 0 0 0 ];
     end
     
     currentTime = currentTime + timeStep;
