@@ -122,9 +122,15 @@ while simStop == 0
     
     % Le fast check a révélé une collision
     if isColliding == 1
-        disp('collision')
-        simStop = 1;
+        disp('collision (fastcheck)')
         
+        collisionData = realCheck(balle, cube, [xAngle, yAngle, zAngle]);
+        if collisionData(1) == 1
+            % real check détecte un impact. Si ce n'est pas le cas, cela 
+            % peut être un frolement (les sphères se touchent pas pas le 
+            % cube.)
+            
+        end
     end
     
     
