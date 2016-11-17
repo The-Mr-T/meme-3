@@ -128,11 +128,11 @@ function retVal = realCheck( sphere, cube, rotVector )
     
     % ici on vérifie si on a eu une collision dans les 2 axes
     
-    coordX = 0;
-    coordY = 0;
-    coordZ = 0;
+    coordX = impactAxeX;
+    coordY = impactAxeY;
+    coordZ = impactAxeZ;
     
-    impactVec = [coordX, coordY, coordZ];
+    impactVec = [coordX coordY coordZ];
     
     xAngle = rotVector(1); % On fait la rotation
     yAngle = rotVector(2);
@@ -146,19 +146,15 @@ function retVal = realCheck( sphere, cube, rotVector )
     impactVecRot = xRotMat * yRotMat * zRotMat * impactVec';
     impactVecRot = impactVecRot';
     %On doit faire la rotation inverse pour retrouver le systeme de 
-    %coordonnées originelles
-    
-    %intersecX
-    %intersecY
-    %intersecZ
+    %coordonnées originelles    
     
     
-    
-    if intersecX == 1 && intersecY == 1 && intersecZ == 1
+    if (intersecX == 1 && intersecY == 1 && intersecZ == 1)
+        disp('foo');
         impact = 1;
-        coordX = impactVecRot(1);
-        coordY = impactVecRot(2);
-        coordZ = impactVecRot(3);
+        coordX = impactVecRot(1)
+        coordY = impactVecRot(2)
+        coordZ = impactVecRot(3)
         retVal = [impact coordX coordY coordZ];
     else
         retVal = [impact 0 0 0];

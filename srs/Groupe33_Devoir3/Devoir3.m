@@ -37,7 +37,7 @@ functiong = 'GFunctionOption1';
 simStop = 0;
 
 % timeStep : Temps entre deux points de simulation (en secondes)
-timeStep = 0.0001;
+timeStep = 0.001;
 
 % Le moment exact de la simulation. 
 currentTime = 0 + timeStep; % On commence la simulation à la deuxieme etape
@@ -140,7 +140,7 @@ while simStop == 0
             normaleCollision = normaleCollision / norm(normaleCollision);
             collisionPoint = collisionPoint + cube{9}; % référentiel par rapport à l'origine
             
-            inertieSphere = ((2 * 0.05 / 3) * 0.02)^2;
+            inertieSphere = (2 * 0.05 / 3) * (0.02^2);
             inertieSphereMat = [inertieSphere 0 0; 0 inertieSphere 0; 0 0 inertieSphere];
             
             inertieCube = ((1 / 12) * 1.2) * ((0.08^2) * 2);
@@ -151,6 +151,7 @@ while simStop == 0
             
             RcP = cube{9} - collisionPoint;
             RbP = balle{1} - collisionPoint;
+            
             
             x = balle{1}(1);
             y = balle{1}(2);
@@ -182,15 +183,16 @@ while simStop == 0
             
             j = -a * (1 + 0.8) * vrel;
             
-            
             vitesseBalleFinal = vitesseBalle' + j * ((normaleCollision' / 0.05) + (inertieSphereMatGlobale \ a_1));       
             vitesseCubeFinal = vitesseCube' - j * ((normaleCollision' / 1.2) + (inertieCubeMatGlobale \ a_2)); 
             
-            vitesseAngBalleFinal = [0 0 0]' + j * inertieSphereMatGlobale \ cross(RbP,normaleCollision)';
+            tempA = inertieSphereMatGlobale \ cross(RbP,normaleCollision)'
+            vitesseAngBalleFinal = j * tempA;
+            
             vitesseAngCubeFinal = avbloci' - j * inertieCubeMatGlobale \ cross(RcP, normaleCollision)';
             
             blocf = [vitesseCube avbloci; vitesseCubeFinal' vitesseAngCubeFinal' ]
-            ballef = [vitesseBalle 0 0 0 ; vitesseBalleFinal' vitesseAngBalleFinal' ]
+            ballef = [vitesseBalle 0 0 0; vitesseBalleFinal' vitesseAngBalleFinal' ]
         end
     end
     
@@ -215,8 +217,8 @@ while simStop == 0
     end
     
     if cubeHasLanded == 1 ||  balleHasLanded == 1
-        blocf = [qCube(iterationIndex, 1) qCube(iterationIndex, 2) qCube(iterationIndex, 3) avbloci;qCube(iterationIndex, 1) qCube(iterationIndex, 2) qCube(iterationIndex, 3) avbloci ];
-        ballef = [qBalle(iterationIndex, 1) qBalle(iterationIndex, 2) qBalle(iterationIndex, 3) 0 0 0;qBalle(iterationIndex, 1) qBalle(iterationIndex, 2) qBalle(iterationIndex, 3) 0 0 0 ];
+        blocf = [qCube(iterationIndex, 1) qCube(iterationIndex, 2) qCube(iterationIndex, 3) avbloci;qCube(iterationIndex, 1) qCube(iterationIndex, 2) qCube(iterationIndex, 3) avbloci ]
+        ballef = [qBalle(iterationIndex, 1) qBalle(iterationIndex, 2) qBalle(iterationIndex, 3) 0 0 0;qBalle(iterationIndex, 1) qBalle(iterationIndex, 2) qBalle(iterationIndex, 3) 0 0 0 ]
     end
     
     currentTime = currentTime + timeStep;
@@ -227,6 +229,18 @@ while simStop == 0
     %    simStop = 1;
     %end
 
+  % now we plot the whole thing
+  %Génère le terrain
+ terrain_x = linspace(0,5,5);
+  terrain_y = linspace(0,5,5);
+  [X,Y] = meshgrid(terrain_x,terrain_y);
+  Z = X*0;
+  
+  mesh(X,Y,Z);
+  hold on;
+  plot3(Post(:,2),Post(:,3),Post(:,4),'r-');
+  plot3(Post(:,5),Post(:,6),Post(:,7),'b-');
+  hold on;
 
 end
 
